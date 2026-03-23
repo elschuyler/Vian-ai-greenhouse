@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Vian AI Greenhouse - Main Activity Layout with Three-Pane Header -->
+<!-- PRD v4.3: Replaces activity_main.xml for VGH fork -->
+
+<androidx.constraintlayout.widget.ConstraintLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/vgh_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context=".vgh.VghMainActivity">
+
+    <!-- Top: Pane Tab Header (Compose View) -->
+    <androidx.compose.ui.platform.ComposeView
+        android:id="@+id/vgh_pane_header"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Middle: Pane Content Container (ViewPager2 for pane switching) -->
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/vgh_pane_viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/vgh_pane_header"
+        app:layout_constraintBottom_toTopOf="@id/vgh_bottom_toolbar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:overScrollMode="never" />
+
+    <!-- Bottom: Three-Slot Toolbar (unchanged from Styx, referenced by ID) -->
+    <include
+        android:id="@+id/vgh_bottom_toolbar"
+        layout="@layout/bottom_menu_vgh"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Overlay: Workspace Settings Bottom Sheet (added programmatically) -->
+    <FrameLayout
+        android:id="@+id/vgh_overlay_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
