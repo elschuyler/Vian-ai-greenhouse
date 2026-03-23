@@ -13,11 +13,7 @@ buildscript {
 }
 
 allprojects {
-    repositories {
-        google()
-        mavenCentral()
-        maven { url 'https://jitpack.io' }
-    }
+    // NO repositories block here - settings.gradle handles it
 }
 
 task clean(type: Delete) {
