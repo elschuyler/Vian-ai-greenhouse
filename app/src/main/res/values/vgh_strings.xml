@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Vian AI Greenhouse - String Resources for Pane Header + Workspace Settings -->
+<resources>
+    <!-- Pane Labels -->
+    <string name="vgh_pane_ai">🧠 AI</string>
+    <string name="vgh_pane_source">📦 Source</string>
+    <string name="vgh_pane_research">🔍 Research</string>
+    
+    <!-- Workspace Settings -->
+    <string name="vgh_workspace_settings">Workspace Settings</string>
+    <string name="vgh_workspace_settings_title">Settings: %1$s</string>
+    <string name="vgh_close">Close</string>
+    
+    <!-- Sections -->
+    <string name="vgh_section_ai_tool">AI Tool</string>
+    <string name="vgh_section_repo">Repository</string>
+    <string name="vgh_section_push">Code Push</string>
+    <string name="vgh_section_pwa">PWA / CI</string>
+    
+    <!-- Fields -->
+    <string name="vgh_ai_tool_entry">AI Tool Entry</string>
+    <string name="vgh_repo_url">Repository URL</string>
+    <string name="vgh_repo_branch">Branch</string>
+    <string name="vgh_ci_url">CI Pipeline URL</string>
+    <string name="vgh_ci_url_placeholder">https://ci.codeberg.org/... or GitHub Actions</string>
+    <string name="vgh_push_encoding">Push Encoding: Base64</string>
+    <string name="vgh_encoding_base64">Base64 encoded (for binary-safe transport)</string>
+    <string name="vgh_encoding_raw">Raw text (default, UTF-8)</string>
+    <string name="vgh_pwa_url">PWA URL</string>
+    <string name="vgh_pwa_url_placeholder">https://your-pwa.example.com</string>
+    
+    <!-- Actions -->
+    <string name="vgh_manage_workspace">Manage Workspace →</string>
+</resources>
