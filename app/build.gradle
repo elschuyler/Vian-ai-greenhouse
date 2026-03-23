@@ -93,18 +93,6 @@ dependencies {
     // Permissions (replacement for com.anthonycr.grant:permissions)
     implementation 'com.google.accompanist:accompanist-permissions:0.32.0'
 
-    // Code Editor (replacement - use local implementation or alternative)
-    // implementation 'com.github.jamal2362:CodeEditor:2.0.0' // REMOVED - unavailable
-
-    // Progress (replacement for com.anthonycr.progress:animated-progress)
-    implementation 'com.github.skydoves:androidveil:1.1.3'
-
-    // NetCipher alternative (use direct OkHttp with cert pinning instead)
-    // implementation 'info.guardianproject.netcipher:netcipher-webkit:2.0.0-alpha1' // REMOVED
-
-    // Mezzanine alternative (use direct annotation processing)
-    // implementation 'com.anthonycr.mezzanine:mezzanine:1.1.1' // REMOVED
-
     // Testing
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
