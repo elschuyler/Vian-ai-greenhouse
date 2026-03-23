@@ -91,7 +91,7 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3'
 
-    // Permissions (replacement for com.anthonycr.grant:permissions)
+    // Permissions (Replacement for com.anthonycr.grant:permissions)
     implementation 'com.google.accompanist:accompanist-permissions:0.32.0'
 
     // Testing
