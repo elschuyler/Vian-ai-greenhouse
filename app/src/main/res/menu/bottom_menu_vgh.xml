@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Vian AI Greenhouse - Bottom Toolbar (3 slots, swipe zone) -->
+<!-- PRD v4.3 Section 14: Context-aware Save, Attach Repo, Menu -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/vgh_bottom_toolbar_root"
+    android:layout_width="match_parent"
+    android:layout_height="56dp"
+    android:orientation="horizontal"
+    android:background="?attr/colorSurface"
+    android:elevation="8dp"
+    android:clickable="true"
+    android:focusable="true">
+
+    <!-- Slot 1: Attach Repo -->
+    <ImageButton
+        android:id="@+id/vgh_slot_attach"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/vgh_slot_attach_desc"
+        android:src="@drawable/ic_attach_repo"
+        android:scaleType="centerInside"
+        android:minWidth="48dp"
+        android:minHeight="48dp" />
+
+    <!-- Slot 2: Save (Context-Aware) -->
+    <ImageButton
+        android:id="@+id/vgh_slot_save"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/vgh_slot_save_desc"
+        android:src="@drawable/ic_save"
+        android:scaleType="centerInside"
+        android:minWidth="48dp"
+        android:minHeight="48dp" />
+
+    <!-- Slot 3: Menu -->
+    <ImageButton
+        android:id="@+id/vgh_slot_menu"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/vgh_slot_menu_desc"
+        android:src="@drawable/ic_menu_grid"
+        android:scaleType="centerInside"
+        android:minWidth="48dp"
+        android:minHeight="48dp" />
+
+</LinearLayout>
