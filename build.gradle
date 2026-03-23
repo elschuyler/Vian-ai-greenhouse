@@ -12,9 +12,7 @@ buildscript {
     }
 }
 
-allprojects {
-    // NO repositories block here - settings.gradle handles it
-}
+// NO allprojects repositories block - settings.gradle handles it
 
 task clean(type: Delete) {
     delete rootProject.buildDir
