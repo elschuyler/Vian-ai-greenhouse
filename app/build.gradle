@@ -37,7 +37,7 @@ android {
     buildFeatures {
         viewBinding true
         compose true
-        dataBinding true
+        dataBinding true  // ← ADD THIS LINE
     }
 
     composeOptions {
@@ -91,7 +91,7 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3'
 
-    // Permissions (Replacement for com.anthonycr.grant:permissions)
+    // Permissions
     implementation 'com.google.accompanist:accompanist-permissions:0.32.0'
 
     // Testing
