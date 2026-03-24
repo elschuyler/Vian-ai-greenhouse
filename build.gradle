@@ -12,13 +12,8 @@ buildscript {
     }
 }
 
-allprojects {
-    repositories {
-        google()
-        mavenCentral()
-        maven { url 'https://jitpack.io' }
-    }
-}
+// DO NOT add repositories here - they are defined in settings.gradle
+// DO NOT add allprojects { repositories {} } - violates RepositoriesMode.FAIL_ON_PROJECT_REPOS
 
 task clean(type: Delete) {
     delete rootProject.buildDir
