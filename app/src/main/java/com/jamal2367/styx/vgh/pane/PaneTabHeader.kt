@@ -1,7 +1,6 @@
 /*
  * Vian AI Greenhouse - Pane Tab Header Component
- * Implements browser-style tab switching for three-pane architecture
- * PRD v4.3 Section 1.5 + UI Additions
+ * PRD v4.3 Section 1.5 + UI Additions: Browser-style tab switching
  */
 
 package com.jamal2367.styx.vgh.pane
@@ -19,30 +18,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.jamal2367.styx.R
-import com.jamal2367.styx.vgh.workspace.WorkspaceState
 
 @Composable
 fun PaneTabHeader(
     currentPane: VghPane,
-    workspaceState: WorkspaceState,
     onPaneSelected: (VghPane) -> Unit,
     onWorkspaceSettingsClick: () -> Unit,
     modifier: Modifier = Modifier,
-    accentColor: Color = Color(0xFF6200EE) // Default purple accent
+    accentColor: Color = Color(0xFF6200EE)
 ) {
-    val context = LocalContext.current
-    val panes = listOfNotNull(
-        VghPane.AI,
-        VghPane.SOURCE,
-        if (workspaceState.researchPaneActivated) VghPane.RESEARCH else null
-    )
-
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -56,7 +44,7 @@ fun PaneTabHeader(
             modifier = Modifier.weight(1f),
             horizontalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-            panes.forEach { pane ->
+            VghPane.values().forEach { pane ->
                 PaneTabButton(
                     pane = pane,
                     isSelected = pane == currentPane,
@@ -76,7 +64,7 @@ fun PaneTabHeader(
         ) {
             Icon(
                 imageVector = Icons.Default.Settings,
-                contentDescription = stringResource(R.string.vgh_workspace_settings),
+                contentDescription = "Workspace Settings",
                 tint = accentColor
             )
         }
@@ -90,12 +78,6 @@ private fun PaneTabButton(
     accentColor: Color,
     onClick: () -> Unit
 ) {
-    val (icon, label) = when (pane) {
-        VghPane.AI -> Icons.Default.Psychology to stringResource(R.string.vgh_pane_ai)
-        VghPane.SOURCE -> Icons.Default.Folder to stringResource(R.string.vgh_pane_source)
-        VghPane.RESEARCH -> Icons.Default.Search to stringResource(R.string.vgh_pane_research)
-    }
-
     Column(
         modifier = Modifier
             .clip(RoundedCornerShape(8.dp))
@@ -106,14 +88,8 @@ private fun PaneTabButton(
             .padding(vertical = 8.dp, horizontal = 12.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = label,
-            tint = if (isSelected) accentColor else Color.Gray,
-            modifier = Modifier.size(20.dp)
-        )
         Text(
-            text = label,
+            text = pane.displayName,
             fontSize = 12.sp,
             color = if (isSelected) accentColor else Color.Gray,
             maxLines = 1,
@@ -131,6 +107,17 @@ private fun PaneTabButton(
     }
 }
 
-enum class VghPane {
-    AI, SOURCE, RESEARCH
+@Composable
+private fun IconButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit
+) {
+    androidx.compose.foundation.layout.Box(
+        modifier = modifier
+            .clickable(onClick = onClick)
+            .padding(8.dp)
+    ) {
+        content()
+    }
 }
