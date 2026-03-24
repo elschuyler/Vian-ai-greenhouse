@@ -37,9 +37,9 @@ android {
     buildFeatures {
         viewBinding true
         compose true
-        dataBinding true
+        dataBinding true  // ← ADD THIS LINE (critical for bookmark_drawer_view.xml)
     }
-
+    
     composeOptions {
         kotlinCompilerExtensionVersion '1.5.1'
     }
