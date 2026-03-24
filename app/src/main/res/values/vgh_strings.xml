@@ -10,7 +10,7 @@
     <string name="vgh_slot_save_desc">Save</string>
     <string name="vgh_slot_menu_desc">Menu</string>
 
-    <!-- NEW: Commit/Push List strings -->
+    <!-- Commit/Push List strings -->
     <string name="vgh_commit_push_list">Commit/Push List</string>
     <string name="vgh_add_to_push_list">Add to Push List</string>
     <string name="vgh_push_now">Push Now</string>
@@ -22,12 +22,12 @@
     <string name="vgh_auto_scroll_enabled">Auto-scroll enabled</string>
     <string name="vgh_auto_scroll_disabled">Auto-scroll disabled</string>
 
-    <!-- NEW: AI Prompt strings -->
+    <!-- AI Prompt strings -->
     <string name="vgh_ai_prompt_title">AI Session Prompt</string>
     <string name="vgh_ai_prompt_copy">Copy Prompt</string>
     <string name="vgh_ai_prompt_copied">Prompt copied to clipboard</string>
 
-    <!-- NEW: Grid Menu strings -->
+    <!-- Grid Menu strings -->
     <string name="vgh_menu_push_list_toggle">Push List Toggle</string>
     <string name="vgh_menu_auto_pilot">Auto Pilot</string>
     <string name="vgh_menu_workspace_list">Workspace List</string>
@@ -44,4 +44,32 @@
     <string name="vgh_menu_view_pwa_ci">View PWA / CI Pane</string>
     <string name="vgh_menu_attach_repo_auto">Attach Repo Auto-Capture</string>
     <string name="vgh_menu_exit">Exit</string>
+
+    <!-- Notes System strings -->
+    <string name="vgh_notes">Notes</string>
+    <string name="vgh_note_title">Note Title</string>
+    <string name="vgh_note_body">Note Body</string>
+    <string name="vgh_add_note">Add Note</string>
+    <string name="vgh_edit_note">Edit Note</string>
+    <string name="vgh_delete_note">Delete Note</string>
+    <string name="vgh_star_note">Star Note</string>
+    <string name="vgh_unstar_note">Unstar Note</string>
+    <string name="vgh_rename_note">Rename Note</string>
+    <string name="vgh_search_notes">Search Notes</string>
+    <string name="vgh_no_notes">No notes yet</string>
+    <string name="vgh_starred_notes">Starred Notes</string>
+    <string name="vgh_current_workspace_notes">Current Workspace Notes</string>
+    <string name="vgh_global_notes">Global Notes</string>
+
+    <!-- Chat Buffer strings -->
+    <string name="vgh_chat_buffer">Chat Buffer</string>
+    <string name="vgh_save_chat_log">Save Chat Log</string>
+    <string name="vgh_chat_log_saved">Chat log saved to Downloads/VGH_Chat_Logs</string>
+    <string name="vgh_chat_log_empty">No chat messages to save</string>
+
+    <!-- CI Log Buffer strings -->
+    <string name="vgh_ci_log_buffer">CI Log Buffer</string>
+    <string name="vgh_save_ci_log">Save CI Log</string>
+    <string name="vgh_ci_log_saved">CI log saved to Downloads/VGH_CI_Logs</string>
+    <string name="vgh_ci_log_empty">No CI logs to save</string>
 </resources>
