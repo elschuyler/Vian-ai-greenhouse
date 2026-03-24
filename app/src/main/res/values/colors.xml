@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Required by Android system -->
-    <color name="black">#000000</color>
-    <color name="white">#FFFFFF</color>
+    <!-- Basic colors required by Android -->
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <!-- Common Material Design colors often referenced -->
+    <color name="md_red_500">#F44336</color>
     <color name="md_grey_100">#F5F5F5</color>
-    
+    <color name="md_grey_300">#E0E0E0</color>
+    <color name="md_grey_400">#BDBDBD</color>
+    <color name="md_grey_500">#9E9E9E</color>
+    <color name="md_grey_650">#757575</color>
+
     <!-- VGH custom colors -->
     <color name="vgh_accent_color">#6200EE</color>
     <color name="vgh_accent_dark">#3700B3</color>
