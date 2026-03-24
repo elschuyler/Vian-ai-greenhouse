@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Color resources required by styles.xml -->
 <resources>
     <color name="vgh_accent_color">#6200EE</color>
     <color name="vgh_accent_dark">#3700B3</color>
