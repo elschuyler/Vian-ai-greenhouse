@@ -4,16 +4,20 @@ buildscript {
     repositories {
         google()
         mavenCentral()
+        // Add JitPack if needed for external libraries later
         maven { url 'https://jitpack.io' }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:8.1.4'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
     }
 }
 
-// DO NOT add repositories here - they are defined in settings.gradle
-// DO NOT add allprojects { repositories {} } - violates RepositoriesMode.FAIL_ON_PROJECT_REPOS
+// Do not declare repositories here for allprojects if using settings.gradle for dependencyResolutionManagement
+// The settings.gradle handles repository locations for Gradle 8+ best practices.
 
 task clean(type: Delete) {
     delete rootProject.buildDir
