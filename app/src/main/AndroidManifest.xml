@@ -27,8 +27,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
 
+        <!-- VGH Main Activity (NEW LAUNCHER) -->
         <activity
-            android:name=".MainActivity"
+            android:name=".vgh.VghMainActivity"
             android:exported="true"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme"
@@ -51,6 +52,15 @@
                 <data android:mimeType="text/plain" />
             </intent-filter>
         </activity>
+
+        <!-- Original MainActivity (kept as fallback) -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="false"
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustResize"
+            android:configChanges="orientation|screenSize|keyboardHidden" />
 
         <activity
             android:name=".IncognitoActivity"
