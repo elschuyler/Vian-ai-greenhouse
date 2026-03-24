@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="AppTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/vgh_accent_color</item>
         <item name="colorPrimaryDark">@color/vgh_accent_dark</item>
         <item name="colorAccent">@color/vgh_accent_color</item>
     </style>
-    
-    <style name="AppTheme.NoActionBar" parent="Theme.MaterialComponents.Light.NoActionBar">
+
+    <!-- Alternative theme without action bar if needed -->
+    <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/vgh_accent_color</item>
         <item name="colorPrimaryDark">@color/vgh_accent_dark</item>
         <item name="colorAccent">@color/vgh_accent_color</item>
