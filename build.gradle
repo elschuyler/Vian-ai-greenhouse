@@ -2,8 +2,8 @@
 buildscript {
     ext.kotlin_version = '1.9.0'
     repositories {
-        // Repositories are now managed in settings.gradle for Gradle 8+
-        // Do not add google() or mavenCentral() here to avoid conflicts
+        google()
+        mavenCentral()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:8.1.4'
@@ -11,8 +11,7 @@ buildscript {
     }
 }
 
-// Leave allprojects block empty or remove it entirely for Gradle 8+
-// repositories are handled in settings.gradle dependencyResolutionManagement
+// DO NOT add repositories here - settings.gradle handles it for Gradle 8+
 
 task clean(type: Delete) {
     delete rootProject.buildDir
