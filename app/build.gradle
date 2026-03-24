@@ -80,7 +80,7 @@ dependencies {
     // WebView & Browser
     implementation 'androidx.webkit:webkit:1.9.0'
 
-    // Network
+    // Network (OkHttp for CI log download)
     implementation 'com.squareup.okhttp3:okhttp:4.12.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.12.0'
 
