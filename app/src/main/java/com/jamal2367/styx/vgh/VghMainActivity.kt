@@ -1,7 +1,7 @@
 /*
  * Vian AI Greenhouse - Main Activity
  * PRD v4.3: Three-pane architecture with Notes + Chat Buffer
- * UPDATED: Phase 4 - Chat Buffer, Notes Integration
+ * UPDATED: Phase 4 - Simplified CI log download (no buffering)
  */
 
 package com.jamal2367.styx.vgh
@@ -10,12 +10,12 @@ import android.os.Bundle
 import android.view.View
 import android.webkit.WebView
 import android.widget.FrameLayout
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.ui.platform.ComposeView
 import com.jamal2367.styx.R
-import com.jamal2367.styx.vgh.bridge.VghJavaScriptBridge
 import com.jamal2367.styx.vgh.buffer.ChatBufferManager
-import com.jamal2367.styx.vgh.buffer.CiLogBufferManager
+import com.jamal2367.styx.vgh.buffer.CiLogDownloader
 import com.jamal2367.styx.vgh.menu.GridMenuManager
 import com.jamal2367.styx.vgh.notes.NotesDatabase
 import com.jamal2367.styx.vgh.notes.NotesRepository
@@ -39,10 +39,9 @@ class VghMainActivity : AppCompatActivity() {
     private lateinit var workspaceManager: WorkspaceManager
     private lateinit var pushListManager: CommitPushListManager
     private lateinit var pushListWindow: CommitPushListWindow
-    private lateinit var jsBridge: VghJavaScriptBridge
     private lateinit var gridMenuManager: GridMenuManager
     private lateinit var chatBufferManager: ChatBufferManager
-    private lateinit var ciLogBufferManager: CiLogBufferManager
+    private lateinit var ciLogDownloader: CiLogDownloader
     private lateinit var notesRepository: NotesRepository
 
     private var showSettingsSheet: Boolean = false
@@ -63,7 +62,7 @@ class VghMainActivity : AppCompatActivity() {
         pushListWindow = CommitPushListWindow(this)
         gridMenuManager = GridMenuManager(this, pushListManager)
         chatBufferManager = ChatBufferManager(this)
-        ciLogBufferManager = CiLogBufferManager(this)
+        ciLogDownloader = CiLogDownloader(this)
 
         // Initialize Notes Database
         val notesDb = NotesDatabase.getInstance(this)
@@ -107,24 +106,12 @@ class VghMainActivity : AppCompatActivity() {
         webViewContainer.removeAllViews()
         webViewContainer.addView(currentWebView)
 
-        // Initialize JavaScript Bridge for Pane A (AI)
-        if (currentPane == VghPane.AI) {
-            setupJavaScriptBridge()
-        }
+        // Set WebViewClient for CI log detection
+        currentWebView?.webViewClient = ciLogDownloader.createWebViewClient()
 
         // Load URL for current pane
         paneManager.getPaneState(currentPane)?.url?.let { url ->
             currentWebView?.loadUrl(url)
-        }
-    }
-
-    private fun setupJavaScriptBridge() {
-        currentWebView?.let { webView ->
-            jsBridge = VghJavaScriptBridge(webView, pushListManager)
-            webView.addJavascriptInterface(jsBridge, "VghBridge")
-
-            // Enable auto-capture based on settings
-            jsBridge.enableAutoCapture(true)
         }
     }
 
@@ -158,13 +145,33 @@ class VghMainActivity : AppCompatActivity() {
             VghPane.AI -> {
                 // PRD Section 14.2: Save chat buffer
                 workspaceManager.getCurrentWorkspace()?.let { workspace ->
-                    chatBufferManager.saveChatLog(workspace.workspaceName)
+                    val file = chatBufferManager.saveChatLog(workspace.workspaceName)
+                    if (file != null) {
+                        Toast.makeText(
+                            this,
+                            getString(R.string.vgh_chat_log_saved),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else {
+                        Toast.makeText(
+                            this,
+                            getString(R.string.vgh_chat_log_empty),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 }
             }
             else -> {
                 // Default: Save chat buffer
                 workspaceManager.getCurrentWorkspace()?.let { workspace ->
-                    chatBufferManager.saveChatLog(workspace.workspaceName)
+                    val file = chatBufferManager.saveChatLog(workspace.workspaceName)
+                    if (file != null) {
+                        Toast.makeText(
+                            this,
+                            getString(R.string.vgh_chat_log_saved),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 }
             }
         }
@@ -189,6 +196,7 @@ class VghMainActivity : AppCompatActivity() {
         if (targetWebView == null) {
             targetWebView = paneManager.createWebViewForPane(targetPane) as? VghWebView
             targetWebView?.setPaneType(targetPane)
+            targetWebView?.webViewClient = ciLogDownloader.createWebViewClient()
         }
 
         // Remove old WebView
@@ -201,21 +209,11 @@ class VghMainActivity : AppCompatActivity() {
         // Resume target pane, pause previous
         currentWebView?.onPaneActivated()
 
-        // Initialize JS Bridge for Pane A
-        if (targetPane == VghPane.AI) {
-            setupJavaScriptBridge()
-        }
-
         // Load URL if needed
         paneManager.getPaneState(targetPane)?.url?.let { url ->
             if (targetWebView?.url != url) {
                 targetWebView.loadUrl(url)
             }
-        }
-
-        // PRD Section 1.3: Auto-navigate Pane B on push (disabled if Push List active)
-        if (pushListManager.shouldAutoNavigateToPaneB()) {
-            // TODO: Navigate Pane B to pushed file after push completes
         }
     }
 
