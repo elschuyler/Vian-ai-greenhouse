@@ -64,12 +64,9 @@
     <!-- Chat Buffer strings -->
     <string name="vgh_chat_buffer">Chat Buffer</string>
     <string name="vgh_save_chat_log">Save Chat Log</string>
-    <string name="vgh_chat_log_saved">Chat log saved to Downloads/VGH_Chat_Logs</string>
+    <string name="vgh_chat_log_saved">Chat log saved to Downloads/VGH/Chat_Logs</string>
     <string name="vgh_chat_log_empty">No chat messages to save</string>
 
-    <!-- CI Log Buffer strings -->
-    <string name="vgh_ci_log_buffer">CI Log Buffer</string>
-    <string name="vgh_save_ci_log">Save CI Log</string>
-    <string name="vgh_ci_log_saved">CI log saved to Downloads/VGH_CI_Logs</string>
-    <string name="vgh_ci_log_empty">No CI logs to save</string>
+    <!-- CI Log Downloader strings -->
+    <string name="vgh_ci_log_downloaded">CI log saved to Downloads/VGH/CI_Logs</string>
 </resources>
