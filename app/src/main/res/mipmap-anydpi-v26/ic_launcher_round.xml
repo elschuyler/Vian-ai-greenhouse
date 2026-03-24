@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Round vector launcher icon (fixes missing ic_launcher_round error) -->
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+    <background android:drawable="@color/vgh_background"/>
+    <foreground>
+        <vector
+            android:width="108dp"
+            android:height="108dp"
+            android:viewportWidth="108"
+            android:viewportHeight="108">
+            <path
+                android:fillColor="@color/vgh_accent_color"
+                android:pathData="M54,0 C24.1,0 0,24.1 0,54 C0,83.9 24.1,108 54,108 C83.9,108 108,83.9 108,54 C108,24.1 83.9,0 54,0 Z"/>
+            <path
+                android:fillColor="@android:color/white"
+                android:pathData="M54,27 L81,54 L54,81 L27,54 Z"/>
+        </vector>
+    </foreground>
+</adaptive-icon>
