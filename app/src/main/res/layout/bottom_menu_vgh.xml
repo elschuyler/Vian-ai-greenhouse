@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Vian AI Greenhouse - Bottom Toolbar (3 slots) -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/vgh_bottom_toolbar_root"
+    android:layout_width="match_parent"
+    android:layout_height="56dp"
+    android:orientation="horizontal"
+    android:background="?attr/colorSurface"
+    android:elevation="8dp"
+    android:clickable="true"
+    android:focusable="true">
+
+    <!-- Slot 1: Attach Repo -->
+    <ImageButton
+        android:id="@+id/vgh_slot_attach"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Attach Repo"
+        android:src="@drawable/ic_attach_repo"
+        android:scaleType="centerInside"
+        android:minWidth="48dp"
+        android:minHeight="48dp" />
+
+    <!-- Slot 2: Save -->
+    <ImageButton
+        android:id="@+id/vgh_slot_save"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Save"
+        android:src="@drawable/ic_save"
+        android:scaleType="centerInside"
+        android:minWidth="48dp"
+        android:minHeight="48dp" />
+
+    <!-- Slot 3: Menu -->
+    <ImageButton
+        android:id="@+id/vgh_slot_menu"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Menu"
+        android:src="@drawable/ic_menu_grid"
+        android:scaleType="centerInside"
+        android:minWidth="48dp"
+        android:minHeight="48dp" />
+
+</LinearLayout>
