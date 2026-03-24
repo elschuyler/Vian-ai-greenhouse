@@ -11,8 +11,9 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven { url 'https://jitpack.io' } // Add JitPack here if needed globally
     }
 }
 
 rootProject.name = "Vian-ai-greenhouse"
-include ':app'  // 🔑 THIS LINE IS REQUIRED - makes :app module visible to Gradle
+include ':app'
