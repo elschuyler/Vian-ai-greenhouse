@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Required by Android system -->
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="md_grey_100">#F5F5F5</color>
+    
+    <!-- VGH custom colors -->
     <color name="vgh_accent_color">#6200EE</color>
     <color name="vgh_accent_dark">#3700B3</color>
     <color name="vgh_background">#FFFFFF</color>
