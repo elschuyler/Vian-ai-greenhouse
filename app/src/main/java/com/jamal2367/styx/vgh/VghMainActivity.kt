@@ -1,7 +1,7 @@
 /*
  * Vian AI Greenhouse - Main Activity
- * PRD v4.3: Three-pane architecture with Smart Bridge + Push List
- * UPDATED: Phase 3 - Commit/Push List, Tag Parser, JavaScript Bridge
+ * PRD v4.3: Three-pane architecture with Notes + Chat Buffer
+ * UPDATED: Phase 4 - Chat Buffer, Notes Integration
  */
 
 package com.jamal2367.styx.vgh
@@ -14,7 +14,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.ui.platform.ComposeView
 import com.jamal2367.styx.R
 import com.jamal2367.styx.vgh.bridge.VghJavaScriptBridge
+import com.jamal2367.styx.vgh.buffer.ChatBufferManager
+import com.jamal2367.styx.vgh.buffer.CiLogBufferManager
 import com.jamal2367.styx.vgh.menu.GridMenuManager
+import com.jamal2367.styx.vgh.notes.NotesDatabase
+import com.jamal2367.styx.vgh.notes.NotesRepository
 import com.jamal2367.styx.vgh.pane.PaneManager
 import com.jamal2367.styx.vgh.pane.PaneTabHeader
 import com.jamal2367.styx.vgh.pane.VghPane
@@ -37,6 +41,9 @@ class VghMainActivity : AppCompatActivity() {
     private lateinit var pushListWindow: CommitPushListWindow
     private lateinit var jsBridge: VghJavaScriptBridge
     private lateinit var gridMenuManager: GridMenuManager
+    private lateinit var chatBufferManager: ChatBufferManager
+    private lateinit var ciLogBufferManager: CiLogBufferManager
+    private lateinit var notesRepository: NotesRepository
 
     private var showSettingsSheet: Boolean = false
     private var currentWebView: VghWebView? = null
@@ -55,6 +62,12 @@ class VghMainActivity : AppCompatActivity() {
         pushListManager = CommitPushListManager(this)
         pushListWindow = CommitPushListWindow(this)
         gridMenuManager = GridMenuManager(this, pushListManager)
+        chatBufferManager = ChatBufferManager(this)
+        ciLogBufferManager = CiLogBufferManager(this)
+
+        // Initialize Notes Database
+        val notesDb = NotesDatabase.getInstance(this)
+        notesRepository = NotesRepository(notesDb.noteDao())
 
         // Load current workspace
         workspaceManager.getCurrentWorkspace()?.let { workspace ->
@@ -67,6 +80,7 @@ class VghMainActivity : AppCompatActivity() {
 
         setupHeader()
         setupWebView()
+        setupBottomToolbar()
     }
 
     private fun setupHeader() {
@@ -112,6 +126,53 @@ class VghMainActivity : AppCompatActivity() {
             // Enable auto-capture based on settings
             jsBridge.enableAutoCapture(true)
         }
+    }
+
+    private fun setupBottomToolbar() {
+        val attachButton = findViewById<View>(R.id.vgh_slot_attach)
+        val saveButton = findViewById<View>(R.id.vgh_slot_save)
+        val menuButton = findViewById<View>(R.id.vgh_slot_menu)
+
+        attachButton.setOnClickListener {
+            handleAttachRepo()
+        }
+
+        saveButton.setOnClickListener {
+            handleSaveAction()
+        }
+
+        menuButton.setOnClickListener {
+            handleMenuAction()
+        }
+    }
+
+    private fun handleAttachRepo() {
+        // PRD Section 14.1: Open bottom sheet with attached files
+        // TODO: Implement bottom sheet
+    }
+
+    private fun handleSaveAction() {
+        val currentPane = paneManager.getCurrentPane()
+        
+        when (currentPane) {
+            VghPane.AI -> {
+                // PRD Section 14.2: Save chat buffer
+                workspaceManager.getCurrentWorkspace()?.let { workspace ->
+                    chatBufferManager.saveChatLog(workspace.workspaceName)
+                }
+            }
+            else -> {
+                // Default: Save chat buffer
+                workspaceManager.getCurrentWorkspace()?.let { workspace ->
+                    chatBufferManager.saveChatLog(workspace.workspaceName)
+                }
+            }
+        }
+    }
+
+    private fun handleMenuAction() {
+        // PRD Section 14.3: Open Grid Menu
+        // TODO: Implement Grid Menu dialog
     }
 
     private fun switchToPane(targetPane: VghPane) {
@@ -222,6 +283,8 @@ class VghMainActivity : AppCompatActivity() {
         super.onPause()
         // Pause current pane WebView
         currentWebView?.onPaneDeactivated()
+        // Flush chat buffer
+        chatBufferManager.flushBuffer()
     }
 
     override fun onResume() {
@@ -235,6 +298,8 @@ class VghMainActivity : AppCompatActivity() {
         // Cleanup all WebViews
         paneManager.cleanup()
         pushListWindow.destroy()
+        // Save any remaining buffer content
+        chatBufferManager.saveChatLog("Unsaved")
     }
 
     override fun onLowMemory() {
