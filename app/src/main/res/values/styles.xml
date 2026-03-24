@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Minimal styles to satisfy AndroidManifest references -->
 <resources>
-    <!-- Required AppTheme for AndroidManifest -->
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
         <item name="colorPrimary">@color/vgh_accent_color</item>
         <item name="colorPrimaryDark">@color/vgh_accent_dark</item>
         <item name="colorAccent">@color/vgh_accent_color</item>
     </style>
     
-    <!-- Alternative theme for activities without action bar -->
     <style name="AppTheme.NoActionBar" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="colorPrimary">@color/vgh_accent_color</item>
         <item name="colorPrimaryDark">@color/vgh_accent_dark</item>
