@@ -171,8 +171,7 @@
     <string name="message_link_copied">El enlace se ha copiado al portapapeles</string>
     <string name="message_location">\n¿Quieres usar tu geolocalización?</string>
     <string name="message_open_download_fail">Este archivo ya no existe</string>
-    <string name="message_permission_request">%1$s \ n \ n desea utilizar: \ n \ n% 2 $ s</string>
-    <string name="message_web_storage_cleared">Almacenamiento web borrado</string>
+    <string name="message_permission_request" formatted="false">Some text with %1$s %2$d</string>    <string name="message_web_storage_cleared">Almacenamiento web borrado</string>
     <string name="mit_license">Licencia MIT</string>
     <string name="name_grayscale">Escala de grises</string>
     <string name="name_increase_contrast">Aumentar contraste</string>
