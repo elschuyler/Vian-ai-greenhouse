@@ -23,11 +23,8 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
       
-    - name: Build with Gradle
-      run: ./gradlew build --stacktrace
-      
-    - name: Assemble Debug APK
-      run: ./gradlew :app:assembleDebug  # FIXED: Added :app: prefix
+    - name: Build APK
+      run: ./gradlew assembleDebug --stacktrace  # FIXED: No :app: prefix needed
       
     - name: Upload APK artifact
       uses: actions/upload-artifact@v4
