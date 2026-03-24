@@ -18,7 +18,7 @@ class ChatBufferManager(private val context: Context) {
     private val tempBufferFile: File = File(context.cacheDir, "temp_buffer_pane_a.txt")
     private val chatLogsDir: File = File(
         Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
-        "VGH_Chat_Logs"
+        "VGH/Chat_Logs"
     )
 
     private val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
