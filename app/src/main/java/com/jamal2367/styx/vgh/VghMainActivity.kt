@@ -1,7 +1,7 @@
 /*
  * Vian AI Greenhouse - Main Activity
- * PRD v4.3: Three-pane architecture with WebView lifecycle management
- * UPDATED: Phase 2 - Pane Manager integration
+ * PRD v4.3: Three-pane architecture with Smart Bridge + Push List
+ * UPDATED: Phase 3 - Commit/Push List, Tag Parser, JavaScript Bridge
  */
 
 package com.jamal2367.styx.vgh
@@ -13,10 +13,14 @@ import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.ui.platform.ComposeView
 import com.jamal2367.styx.R
+import com.jamal2367.styx.vgh.bridge.VghJavaScriptBridge
+import com.jamal2367.styx.vgh.menu.GridMenuManager
 import com.jamal2367.styx.vgh.pane.PaneManager
 import com.jamal2367.styx.vgh.pane.PaneTabHeader
 import com.jamal2367.styx.vgh.pane.VghPane
 import com.jamal2367.styx.vgh.pane.VghWebView
+import com.jamal2367.styx.vgh.push.CommitPushListManager
+import com.jamal2367.styx.vgh.push.CommitPushListWindow
 import com.jamal2367.styx.vgh.workspace.WorkspaceManager
 import com.jamal2367.styx.vgh.workspace.WorkspaceSettingsBottomSheet
 import com.jamal2367.styx.vgh.workspace.WorkspaceState
@@ -29,6 +33,10 @@ class VghMainActivity : AppCompatActivity() {
 
     private lateinit var paneManager: PaneManager
     private lateinit var workspaceManager: WorkspaceManager
+    private lateinit var pushListManager: CommitPushListManager
+    private lateinit var pushListWindow: CommitPushListWindow
+    private lateinit var jsBridge: VghJavaScriptBridge
+    private lateinit var gridMenuManager: GridMenuManager
 
     private var showSettingsSheet: Boolean = false
     private var currentWebView: VghWebView? = null
@@ -44,11 +52,18 @@ class VghMainActivity : AppCompatActivity() {
         // Initialize managers
         paneManager = PaneManager(this)
         workspaceManager = WorkspaceManager(this)
+        pushListManager = CommitPushListManager(this)
+        pushListWindow = CommitPushListWindow(this)
+        gridMenuManager = GridMenuManager(this, pushListManager)
 
         // Load current workspace
         workspaceManager.getCurrentWorkspace()?.let { workspace ->
             paneManager.setWorkspaceState(workspace)
         }
+
+        // Initialize Push List
+        pushListWindow.initialize(pushListManager)
+        gridMenuManager.initialize()
 
         setupHeader()
         setupWebView()
@@ -78,9 +93,24 @@ class VghMainActivity : AppCompatActivity() {
         webViewContainer.removeAllViews()
         webViewContainer.addView(currentWebView)
 
+        // Initialize JavaScript Bridge for Pane A (AI)
+        if (currentPane == VghPane.AI) {
+            setupJavaScriptBridge()
+        }
+
         // Load URL for current pane
         paneManager.getPaneState(currentPane)?.url?.let { url ->
             currentWebView?.loadUrl(url)
+        }
+    }
+
+    private fun setupJavaScriptBridge() {
+        currentWebView?.let { webView ->
+            jsBridge = VghJavaScriptBridge(webView, pushListManager)
+            webView.addJavascriptInterface(jsBridge, "VghBridge")
+
+            // Enable auto-capture based on settings
+            jsBridge.enableAutoCapture(true)
         }
     }
 
@@ -110,11 +140,21 @@ class VghMainActivity : AppCompatActivity() {
         // Resume target pane, pause previous
         currentWebView?.onPaneActivated()
 
+        // Initialize JS Bridge for Pane A
+        if (targetPane == VghPane.AI) {
+            setupJavaScriptBridge()
+        }
+
         // Load URL if needed
         paneManager.getPaneState(targetPane)?.url?.let { url ->
             if (targetWebView?.url != url) {
                 targetWebView.loadUrl(url)
             }
+        }
+
+        // PRD Section 1.3: Auto-navigate Pane B on push (disabled if Push List active)
+        if (pushListManager.shouldAutoNavigateToPaneB()) {
+            // TODO: Navigate Pane B to pushed file after push completes
         }
     }
 
@@ -194,6 +234,7 @@ class VghMainActivity : AppCompatActivity() {
         super.onDestroy()
         // Cleanup all WebViews
         paneManager.cleanup()
+        pushListWindow.destroy()
     }
 
     override fun onLowMemory() {
