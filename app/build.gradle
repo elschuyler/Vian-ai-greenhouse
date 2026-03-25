@@ -1,19 +1,18 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
-    id 'kotlin-parcelize' // Or kapt if using annotation processors like Room Compiler
 }
 
 android {
-    namespace 'com.jamal2367.styx' // Keep the original namespace if it matches your manifests
-    compileSdk 34 // Match your AndroidManifest.xml usesCleartextTraffic targetApi
+    namespace 'com.jamal2367.styx'
+    compileSdk 34
 
     defaultConfig {
-        applicationId "com.jamal2367.styx" // Keep the original applicationId
-        minSdk 23 // Match your AndroidManifest.xml
-        targetSdk 34 // Match your AndroidManifest.xml
+        applicationId "com.jamal2367.styx"
+        minSdk 23
+        targetSdk 34
         versionCode 1
-        versionName "4.3"
+        versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -24,94 +23,102 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
-
     kotlinOptions {
-        jvmTarget = '17'
+        jvmTarget = '1.8'
     }
-
     buildFeatures {
         viewBinding true
-        compose true
-        // Enable data binding if any of your *current* layouts use <layout> tags (like activity_vgh_main.xml potentially)
-        // dataBinding true
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion '1.5.1'
+        // Add other features as needed, e.g., dataBinding true
     }
 }
 
 dependencies {
-    // AndroidX Core
-    implementation 'androidx.core:core-ktx:1.12.0'
+
+    implementation 'androidx.core:core-ktx:1.10.1'
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.11.0'
+    implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'androidx.activity:activity-ktx:1.8.2'
-    implementation 'androidx.fragment:fragment-ktx:1.6.2'
-
-    // Jetpack Compose
-    implementation platform('androidx.compose:compose-bom:2024.02.00')
-    implementation 'androidx.compose.ui:ui'
-    implementation 'androidx.compose.ui:ui-graphics'
-    implementation 'androidx.compose.ui:ui-tooling-preview'
-    implementation 'androidx.compose.material:material'
-    implementation 'androidx.compose.material:material-icons-extended'
-    implementation 'androidx.activity:activity-compose:1.8.2'
-
-    // Lifecycle
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.7.0'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0'
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.7.0'
-
-    // Navigation
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.7.6'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.7.6'
-
-    // Room Database (for Notes)
-    implementation 'androidx.room:room-runtime:2.6.1'
-    implementation 'androidx.room:room-ktx:2.6.1'
-    annotationProcessor 'androidx.room:room-compiler:2.6.1' // Use kapt if using KSP
-
-    // WebView & Browser
-    implementation 'androidx.webkit:webkit:1.9.0'
-
-    // Network (OkHttp for CI log download, Gson for JSON)
-    implementation 'com.squareup.okhttp3:ok12.0'
-    implementation 'com.squareup.okhttp3:logging-interceptor:4.12.0'
-    implementation 'com.google.code.gson:gson:2.10.1'
-
-    // Coroutines
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3'
-
-    // Permissions (Acclaimist)
-    // NOTE: Accompanist permissions version 0.32.0 might have issues. Try a more recent stable one.
-    // Check https://developer.android.com/jetpack/androidx/releases/accompanist for latest.
-    // Example newer version (check actual availability):
-    // implementation "com.google.accompanist:accompanist-permissions:0.34.0" // Or latest stable
-
-    // RecyclerView (for Push List)
-    implementation 'androidx.recyclerview:recyclerview:1.3.2'
-
-    // CardView (for Push List Window)
-    implementation 'androidx.cardview:cardview:1.0.0'
-
-    // Testing
     testImplementation 'junit:junit:4.13.2'
-    'androidunit:1.1.5'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
-    // Compose Debug
-    debugImplementation 'androidx.compose.ui:ui-tooling'
-    debugImplementation 'androidx.compose.ui:ui-test-manifest'
-}
+    // Accompanist Permissions (Corrected version)
+    implementation "com.google.accompanist:accompanist-permissions:0.32.0"
 
-// Example: If using KSP instead of annotationProcessor for Room
-// apply plugin: 'com.google.devtools.ksp' // Add this plugin if using KSP
-// ksp 'androidx.room:room-compiler:2.6.1' // Use this instead of annotationProcessor if using KSP
+    // ViewModel and LiveData
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.6.1"
+
+    // Room components
+    implementation "androidx.room:room-runtime:2.5.0"
+    annotationProcessor "androidx.room:room-compiler:2.5.0"
+    // To use Kotlin annotation processing tool
+    ksp "androidx.room:room-compiler:2.5.0"
+
+    // Retrofit
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+
+    // OkHttp (Corrected version)
+    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.12.0'
+
+    // Data Store
+    implementation "androidx.datastore:datastore-preferences:1.0.0"
+
+    // Work Manager
+    implementation "androidx.work:work-runtime-ktx:2.8.1"
+
+    // Accompanist System UI Controller (if using Compose for parts of the UI)
+    implementation "com.google.accompanist:accompanist-systemuicontroller:0.32.0"
+
+    // Custom Tabs (for opening links externally if needed)
+    implementation 'androidx.browser:browser:1.5.0'
+
+    // Swipe Refresh (if using Compose for parts of the UI)
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
+
+    // RecyclerView
+    implementation "androidx.recyclerview:recyclerview:1.3.0"
+
+    // Fragment KTX
+    implementation "androidx.fragment:fragment-ktx:1.6.0"
+
+    // Activity KTX
+    implementation "androidx.activity:activity-ktx:1.7.2"
+
+    // Lifecycle Runtime KTX
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.6.1"
+
+    // Hilt (if planning to use DI later)
+    // implementation "com.google.dagger:hilt-android:2.44.2"
+    // ksp "com.google.dagger:hilt-compiler:2.44.2"
+
+    // Kotlin Coroutines Core
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4"
+
+    // Kotlin Coroutines Android
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
+
+    // Gson (often used with Retrofit)
+    implementation 'com.google.code.gson:gson:2.10.1'
+
+    // JUnit (removed the incorrect line 'androidunit:1.1.5'')
+    // testImplementation 'junit:junit:4.13.2' // Already added above
+
+    // AndroidX Test Core
+    // androidTestImplementation 'androidx.test:core:1.5.0' // Not strictly necessary if using ext:junit
+
+    // Espresso Contrib (for RecyclerView, DrawerLayout, etc.)
+    // androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.5.1' // Add if needed
+
+    // Mockito Core (for mocking in tests)
+    // testImplementation 'org.mockito:mockito-core:5.3.1' // Add if needed
+
+    // Truth (for fluent assertions in tests)
+    // testImplementation 'com.google.truth:truth:1.1.4' // Add if needed
+}
