@@ -1,17 +1,17 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
-    id 'kotlin-parcelize'
+    id 'kotlin-parcelize' // Or kapt if using annotation processors like Room Compiler
 }
 
 android {
     namespace 'com.jamal2367.styx' // Keep the original namespace if it matches your manifests
-    compileSdk 34
+    compileSdk 34 // Match your AndroidManifest.xml usesCleartextTraffic targetApi
 
     defaultConfig {
         applicationId "com.jamal2367.styx" // Keep the original applicationId
-        minSdk 23
-        targetSdk 34
+        minSdk 23 // Match your AndroidManifest.xml
+        targetSdk 34 // Match your AndroidManifest.xml
         versionCode 1
         versionName "4.3"
 
@@ -38,7 +38,7 @@ android {
         viewBinding true
         compose true
         // Enable data binding if any of your *current* layouts use <layout> tags (like activity_vgh_main.xml potentially)
-        dataBinding true
+        // dataBinding true
     }
 
     composeOptions {
@@ -76,24 +76,25 @@ dependencies {
     // Room Database (for Notes)
     implementation 'androidx.room:room-runtime:2.6.1'
     implementation 'androidx.room:room-ktx:2.6.1'
-    annotationProcessor 'androidx.room:room-compiler:2.6.1'
+    annotationProcessor 'androidx.room:room-compiler:2.6.1' // Use kapt if using KSP
 
     // WebView & Browser
     implementation 'androidx.webkit:webkit:1.9.0'
 
-    // Network (OkHttp for CI log download)
-    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+    // Network (OkHttp for CI log download, Gson for JSON)
+    implementation 'com.squareup.okhttp3:ok12.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.12.0'
-
-    // JSON
     implementation 'com.google.code.gson:gson:2.10.1'
 
     // Coroutines
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3'
 
-    // Permissions
-    implementation 'com.google.accompanist:accompanist-permissions:0.32.0'
+    // Permissions (Acclaimist)
+    // NOTE: Accompanist permissions version 0.32.0 might have issues. Try a more recent stable one.
+    // Check https://developer.android.com/jetpack/androidx/releases/accompanist for latest.
+    // Example newer version (check actual availability):
+    // implementation "com.google.accompanist:accompanist-permissions:0.34.0" // Or latest stable
 
     // RecyclerView (for Push List)
     implementation 'androidx.recyclerview:recyclerview:1.3.2'
@@ -103,10 +104,14 @@ dependencies {
 
     // Testing
     testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidunit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
     // Compose Debug
     debugImplementation 'androidx.compose.ui:ui-tooling'
     debugImplementation 'androidx.compose.ui:ui-test-manifest'
 }
+
+// Example: If using KSP instead of annotationProcessor for Room
+// apply plugin: 'com.google.devtools.ksp' // Add this plugin if using KSP
+// ksp 'androidx.room:room-compiler:2.6.1' // Use this instead of annotationProcessor if using KSP
