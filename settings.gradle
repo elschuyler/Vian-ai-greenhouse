@@ -11,7 +11,7 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        maven { url 'https://jitpack.io' } // Add JitPack here if needed globally
+        maven { url 'https://jitpack.io' } // Removed trailing space
     }
 }
 
