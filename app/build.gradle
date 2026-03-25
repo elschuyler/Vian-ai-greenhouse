@@ -66,7 +66,7 @@ dependencies {
 
     // OkHttp (Corrected version - this was the source of the error in job-logs (2).txt)
     // Ensure the version string is correct, e.g., 4.12.0, not something like "ok12.0:"
-    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+    implementation 'com.squareup.okhttp3:okhttp:4.12.0'    
     implementation 'com.squareup.okhttp3:logging-interceptor:4.12.0'
 
     // Data Store
