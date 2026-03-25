@@ -1,8 +1,6 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
-    // If you plan to use KSP later, add its plugin here, e.g.:
-    // id 'com.google.devtools.ksp' version 'x.y.z' apply false // Replace x.y.z with the correct version matching your Kotlin version
 }
 
 android {
@@ -36,12 +34,6 @@ android {
         viewBinding true
         // Add other features as needed, e.g., dataBinding true, compose true
     }
-    // Ensure packaging options to avoid conflicts, especially with OkHttp
-    packagingOptions {
-        resources {
-            excludes += ['/META-INF/{AL2.0,LGPL2.1}', 'META-INF/DEPENDENCIES', 'META-INF/LICENSE', 'META-INF/LICENSE.txt', 'META-INF/NOTICE', 'META-INF/NOTICE.txt']
-        }
-    }
 }
 
 dependencies {
@@ -63,9 +55,10 @@ dependencies {
 
     // Room components
     implementation "androidx.room:room-runtime:2.5.0"
-    // Use ksp instead of annotationProcessor if KSP plugin is applied and you want to use it for Room
-    // ksp "androidx.room:room-compiler:2.5.0"
     annotationProcessor "androidx.room:room-compiler:2.5.0"
+    // To use Kotlin annotation processing tool (KSP) for Room instead of annotationProcessor,
+    // add the KSP plugin at the top-level plugins block and uncomment the line below, commenting out the annotationProcessor line above.
+    // ksp "androidx.room:room-compiler:2.5.0"
 
     // Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
@@ -136,7 +129,7 @@ dependencies {
     // implementation 'net.i2p.android.helper:i2p-android-helper:+'
 
     // Orbot Helper (if used)
-    // implementation 'info.guardianproject.net:libtorclient:0.3.2' // Example, check for correct/artifact
+    // implementation 'info.guardianproject.net:libtorclient:0.3.2' // Example, check for correct artifact
 
     // Note: Libraries like 'anthonycr', 'browser', 'webkit', 'databinding', 'palette',
     // 'styleable', 'attr', 'ids', 'arrays', 'plurals', 'dimens' mentioned in errors
