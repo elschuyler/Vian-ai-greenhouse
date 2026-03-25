@@ -1,151 +1,123 @@
-// worker.js - Supreme Agent Director v2.5 (Groq + Heartbeat + Sync)
-export default {
-  async fetch(request, env, ctx) {
-    // 1. Handle CORS for your PWA
-    if (request.method === "OPTIONS") {
-      return new Response(null, {
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "POST, OPTIONS",
-          "Access-Control-Allow-Headers": "Content-Type"
-        }
-      });
-    }
-
-    if (request.method !== "POST") {
-      return new Response("Supreme Ghost Network is online.", { status: 200 });
-    }
-
-    try {
-      const body = await request.json();
-      const userPrompt = body.prompt;
-
-      // 2. THE DETECTOR (Llama 3.2 1B - Switchboard)
-      const detectorPrompt = `
-      Analyze the user prompt and output ONLY a JSON object.
-      Providers: 
-      - "GITHUB": Heavy coding or logic.
-      - "GEMINI": Large docs, research, file analysis.
-      - "GROQ": Fast utility, math, general chat.
-      - "CLOUDFLARE": Basic greetings/casual.
-      Set "context_needed" to true if the prompt asks about past notes, memory, or "my vault".
-      User Prompt: "${userPrompt}"
-      Output: { "target": "PROVIDER_NAME", "context_needed": boolean }`;
-
-      const detectorResponse = await env.AI.run('@cf/meta/llama-3.2-1b-instruct', {
-        messages: [{ role: "user", content: detectorPrompt }]
-      });
-
-      let routingDecision;
-      try {
-        const cleanJson = detectorResponse.response.replace(/```json/g, "").replace(/```/g, "").trim();
-        routingDecision = JSON.parse(cleanJson);
-      } catch (e) {
-        routingDecision = { target: "GROQ", context_needed: false };
-      }
-
-      // 3. THE VAULT (Dynamic Heartbeat Retrieval)
-      let driveContext = "";
-      let accessToken = "";
-
-      if (routingDecision.context_needed) {
-        try {
-          accessToken = await getGoogleAccessToken(env);
-          const driveRes = await fetch(`https://www.googleapis.com/drive/v3/files/${env.DRIVE_FILE_ID}?alt=media`, {
-            headers: { "Authorization": `Bearer ${accessToken}` }
-          });
-          if (driveRes.ok) driveContext = await driveRes.text();
-        } catch (err) {
-          driveContext = "[Memory vault is temporarily locked]";
-        }
-      }
-
-      const finalPrompt = driveContext 
-        ? `[Memory Context: ${driveContext}]\n\nUser: ${userPrompt}` 
-        : userPrompt;
-
-      // 4. THE NETWORK (Routing to Experts)
-      const GATEWAY_BASE = `https://gateway.ai.cloudflare.com/v1/${env.CF_ACCOUNT_ID}/${env.GATEWAY_NAME}`;
-      let finalAnswer = "";
-
-      if (routingDecision.target === "GITHUB") {
-        const res = await fetch("https://models.inference.ai.azure.com/chat/completions", {
-          method: "POST",
-          headers: { "Content-Type": "application/json", "Authorization": `Bearer ${env.GITHUB_TOKEN}` },
-          body: JSON.stringify({ model: "gpt-4o", messages: [{ role: "user", content: finalPrompt }] })
-        });
-        const data = await res.json();
-        finalAnswer = data.choices[0].message.content;
-
-      } else if (routingDecision.target === "GEMINI") {
-        const res = await fetch(`${GATEWAY_BASE}/google-ai-studio/v1beta/models/gemini-2.0-flash:generateContent?key=${env.GEMINI_API_KEY}`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ contents: [{ parts: [{ text: finalPrompt }] }] })
-        });
-        const data = await res.json();
-        finalAnswer = data.candidates[0].content.parts[0].text;
-
-      } else if (routingDecision.target === "GROQ") {
-        const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-          method: "POST",
-          headers: { "Content-Type": "application/json", "Authorization": `Bearer ${env.GROQ_API_KEY}` },
-          body: JSON.stringify({ model: "llama-3.3-70b-versatile", messages: [{ role: "user", content: finalPrompt }] })
-        });
-        const data = await res.json();
-        finalAnswer = data.choices[0].message.content;
-
-      } else {
-        const res = await env.AI.run('@cf/meta/llama-3.2-1b-instruct', {
-          messages: [{ role: "user", content: finalPrompt }]
-        });
-        finalAnswer = res.response;
-      }
-
-      // 5. AUTO-SYNC (Update your .txt file in the background)
-      if (routingDecision.context_needed) {
-        ctx.waitUntil(saveToVault(env, accessToken, userPrompt, finalAnswer));
-      }
-
-      return new Response(JSON.stringify({ response: finalAnswer, routing: routingDecision.target }), {
-        headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" }
-      });
-
-    } catch (error) {
-      return new Response(JSON.stringify({ error: error.message }), { status: 500, headers: { "Access-Control-Allow-Origin": "*" } });
-    }
-  }
-};
-
-/** * TOOLS
- */
-async function getGoogleAccessToken(env) {
-  const resp = await fetch("https://oauth2.googleapis.com/token", {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: new URLSearchParams({
-      client_id: env.DRIVE_CLIENT_ID,
-      client_secret: env.DRIVE_CLIENT_SECRET,
-      refresh_token: env.DRIVE_REFRESH_TOKEN,
-      grant_type: "refresh_token",
-    })
-  });
-  const data = await resp.json();
-  if (!resp.ok) throw new Error("Google Auth Failed");
-  return data.access_token;
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+    // Add the KSP plugin if you intend to use it for Room or other annotation processors
+    // id 'com.google.devtools.ksp' version 'x.y.z' apply false // Replace x.y.z with the correct version
 }
 
-async function saveToVault(env, token, prompt, answer) {
-  if (!token) token = await getGoogleAccessToken(env);
-  const currentRes = await fetch(`https://www.googleapis.com/drive/v3/files/${env.DRIVE_FILE_ID}?alt=media`, {
-    headers: { "Authorization": `Bearer ${token}` }
-  });
-  const currentText = await currentRes.text();
-  const entry = `\n\n[${new Date().toISOString()}]\nUser: ${prompt}\nAI: ${answer.substring(0, 150)}...`;
-  
-  await fetch(`https://www.googleapis.com/upload/drive/v3/files/${env.DRIVE_FILE_ID}?uploadType=media`, {
-    method: "PATCH",
-    headers: { "Authorization": `Bearer ${token}`, "Content-Type": "text/plain" },
-    body: currentText + entry
-  });
+android {
+    namespace 'com.jamal2367.styx'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.jamal2367.styx"
+        minSdk 23
+        targetSdk 34
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+    buildFeatures {
+        viewBinding true
+        // Add other features as needed, e.g., dataBinding true, compose true
+    }
+    packagingOptions {
+        resources {
+            excludes += ['META-INF/DEPENDENCIES', 'META-INF/LICENSE', 'META-INF/LICENSE.txt', 'META-INF/NOTICE', 'META-INF/NOTICE.txt']
+        }
+    }
 }
+
+dependencies {
+
+    implementation 'androidx.core:core-ktx:1.10.1'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+
+    // Accompanist Permissions (Corrected version)
+    implementation "com.google.accompanist:accompanist-permissions:0.32.0"
+
+    // ViewModel and LiveData
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.6.1"
+
+    // Room components
+    implementation "androidx.room:room-runtime:2.5.0"
+    // Use ksp instead of annotationProcessor if KSP plugin is applied
+    // ksp "androidx.room:room-compiler:2.5.0"
+    annotationProcessor "androidx.room:room-compiler:2.5.0"
+
+    // Retrofit
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+
+    // OkHttp (Corrected version - this was the source of the error in job-logs (2).txt)
+    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.12.0'
+
+    // Data Store
+    implementation "androidx.datastore:datastore-preferences:1.0.0"
+
+    // Work Manager
+    implementation "androidx.work:work-runtime-ktx:2.8.1"
+
+    // Accompanist System UI Controller (if using Compose for parts of the UI)
+    implementation "com.google.accompanist:accompanist-systemuicontroller:0.32.0"
+
+    // Custom Tabs (for opening links externally if needed)
+    implementation 'androidx.browser:browser:1.5.0'
+
+    // Swipe Refresh (if using Compose for parts of the UI)
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
+
+    // RecyclerView
+    implementation "androidx.recyclerview:recyclerview:1.3.0"
+
+    // Fragment KTX
+    implementation "androidx.fragment:fragment-ktx:1.6.0"
+
+    // Activity KTX
+    implementation "androidx.activity:activity-ktx:1.7.2"
+
+    // Lifecycle Runtime KTX
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.6.1"
+
+    // Kotlin Coroutines Core
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4"
+
+    // Kotlin Coroutines Android
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
+
+    // Gson (often used with Retrofit)
+    implementation 'com.google.code.gson:gson:2.10.1'
+
+    // Hilt (if planning to use DI later)
+    // implementation "com.google.dagger:hilt-android:2.44.2"
+    // ksp "com.google.dagger:hilt-compiler:2.44.2" // Requires KSP plugin
+
+    // Uncomment the following lines if you intended to use the ksp() method for Room or other processors
+    // Make sure the KSP plugin version matches your Kotlin version in the root build.gradle
+    // ksp("androidx.room:room-compiler:2.5.0")
+}
+
+// Optional: Apply KSP plugin globally if using it extensively
+// apply plugin: 'com.google.devtools.ksp' // Only if using KSP and the plugin was applied at the top
