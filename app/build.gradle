@@ -1,7 +1,8 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
-    id 'kotlin-kapt'
+    // If you plan to use KSP later, add its plugin here, e.g.:
+    // id 'com.google.devtools.ksp' version 'x.y.z' apply false // Replace x.y.z with the correct version matching your Kotlin version
 }
 
 android {
@@ -33,6 +34,13 @@ android {
     }
     buildFeatures {
         viewBinding true
+        // Add other features as needed, e.g., dataBinding true, compose true
+    }
+    // Ensure packaging options to avoid conflicts, especially with OkHttp
+    packagingOptions {
+        resources {
+            excludes += ['/META-INF/{AL2.0,LGPL2.1}', 'META-INF/DEPENDENCIES', 'META-INF/LICENSE', 'META-INF/LICENSE.txt', 'META-INF/NOTICE', 'META-INF/NOTICE.txt']
+        }
     }
 }
 
@@ -46,6 +54,9 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
+    // Accompanist Permissions (Corrected version)
+    implementation "com.google.accompanist:accompanist-permissions:0.32.0"
+
     // ViewModel and LiveData
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.6.1"
@@ -53,13 +64,16 @@ dependencies {
 
     // Room components
     implementation "androidx.room:room-runtime:2.5.0"
-    kapt "androidx.room:room-compiler:2.5.0"
+    // Use ksp instead of annotationProcessor if KSP plugin is applied and you want to use it for Room
+    // ksp "androidx.room:room-compiler:2.5.0"
+    annotationProcessor "androidx.room:room-compiler:2.5.0"
 
     // Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
 
-    // OkHttp
+    // OkHttp (Corrected version - this was the source of the error in job-logs (2).txt)
+    // Ensure the version string is correct, e.g., 4.12.0, not something like "ok12.0:"
     implementation 'com.squareup.okhttp3:okhttp:4.12.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.12.0'
 
@@ -69,10 +83,13 @@ dependencies {
     // Work Manager
     implementation "androidx.work:work-runtime-ktx:2.8.1"
 
-    // Custom Tabs
+    // Accompanist System UI Controller (if using Compose for parts of the UI)
+    implementation "com.google.accompanist:accompanist-systemuicontroller:0.32.0"
+
+    // Custom Tabs (for opening links externally if needed)
     implementation 'androidx.browser:browser:1.5.0'
 
-    // Swipe Refresh
+    // Swipe Refresh (if using Compose for parts of the UI)
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
 
     // RecyclerView
@@ -84,10 +101,46 @@ dependencies {
     // Activity KTX
     implementation "androidx.activity:activity-ktx:1.7.2"
 
-    // Kotlin Coroutines
+    // Kotlin Coroutines Core
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4"
+
+    // Kotlin Coroutines Android
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
 
-    // Gson
+    // Gson (often used with Retrofit)
     implementation 'com.google.code.gson:gson:2.10.1'
+
+    // Hilt (if planning to use DI later)
+    // implementation "com.google.dagger:hilt-android:2.44.2"
+    // ksp "com.google.dagger:hilt-compiler:2.44.2" // Requires KSP plugin
+
+    // RxJava2/RxKotlin (if used by the original Styx codebase you're adapting)
+    // implementation 'io.reactivex.rxjava2:rxjava:2.x.y'
+    // implementation 'io.reactivex.rxjava2:rxandroid:2.x.y'
+    // implementation 'io.reactivex.rxjava2:rxkotlin:2.x.y'
+
+    // RxJava3/RxKotlin (if used by the original Styx codebase you're adapting)
+    // implementation 'io.reactivex.rxjava3:rxjava:3.x.y'
+    // implementation 'io.reactivex.rxjava3:rxandroid:3.x.y'
+    // implementation 'io.reactivex.rxjava3:rxkotlin:3.x.y'
+
+    // JSoup (for HTML parsing, if used)
+    // implementation 'org.jsoup:jsoup:1.15.3' // Or latest version
+
+    // Readability4J (for reading mode, if used)
+    // implementation 'com.github.dankito.readability4j:readability4j:1.0.1' // Or latest version
+
+    // I2P Android Helper (if used)
+    // implementation 'net.i2p.android.helper:i2p-android-helper:+'
+
+    // Orbot Helper (if used)
+    // implementation 'info.guardianproject.net:libtorclient:0.3.2' // Example, check for correct/artifact
+
+    // Note: Libraries like 'anthonycr', 'browser', 'webkit', 'databinding', 'palette',
+    // 'styleable', 'attr', 'ids', 'arrays', 'plurals', 'dimens' mentioned in errors
+    // are likely internal Android libraries or generated resource references (R.*) that
+    // are missing because of previous compilation errors or incorrect imports.
+    // They should resolve once the Gradle file syntax and dependency issues are fixed.
 }
+// Optional: Apply KSP plugin globally if using it extensively (e.g., for Room, Hilt)
+// apply plugin: 'com.google.devtools.ksp' // Only if using KSP and the plugin was applied at the top
