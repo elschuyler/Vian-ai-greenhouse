@@ -1,8 +1,8 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
-    // If you plan to use KSP later, add its plugin here, e.g.:
-    // id 'com.google.devtools.ksp' version 'x.y.z' apply false // Replace x.y.z with the correct version matching your Kotlin version
+    id 'kotlin-kapt'
+    id 'kotlin-parcelize'
 }
 
 android {
@@ -15,7 +15,6 @@ android {
         targetSdk 34
         versionCode 1
         versionName "1.0"
-
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -25,122 +24,117 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
     buildFeatures {
         viewBinding true
-        // Add other features as needed, e.g., dataBinding true, compose true
+        dataBinding true
+        compose true
     }
-    // Ensure packaging options to avoid conflicts, especially with OkHttp
+
+    composeOptions {
+        kotlinCompilerExtensionVersion '1.5.1'
+    }
+
     packagingOptions {
         resources {
-            excludes += ['/META-INF/{AL2.0,LGPL2.1}', 'META-INF/DEPENDENCIES', 'META-INF/LICENSE', 'META-INF/LICENSE.txt', 'META-INF/NOTICE', 'META-INF/NOTICE.txt']
+            excludes += [
+                '/META-INF/{AL2.0,LGPL2.1}',
+                'META-INF/DEPENDENCIES',
+                'META-INF/LICENSE',
+                'META-INF/LICENSE.txt',
+                'META-INF/NOTICE',
+                'META-INF/NOTICE.txt'
+            ]
         }
     }
 }
 
 dependencies {
-
+    // AndroidX Core
     implementation 'androidx.core:core-ktx:1.10.1'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    implementation "androidx.fragment:fragment-ktx:1.6.0"
+    implementation "androidx.activity:activity-ktx:1.7.2"
+    implementation "androidx.recyclerview:recyclerview:1.3.0"
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
+    implementation 'androidx.browser:browser:1.5.0'
 
-    // Accompanist Permissions (Corrected version)
-    implementation "com.google.accompanist:accompanist-permissions:0.32.0"
-
-    // ViewModel and LiveData
+    // Lifecycle
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.6.1"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.6.1"
 
-    // Room components
-    implementation "androidx.room:room-runtime:2.5.0"
-    // Use ksp instead of annotationProcessor if KSP plugin is applied and you want to use it for Room
-    // ksp "androidx.room:room-compiler:2.5.0"
-    annotationProcessor "androidx.room:room-compiler:2.5.0"
+    // Jetpack Compose
+    def compose_bom = platform('androidx.compose:compose-bom:2023.08.00')
+    implementation compose_bom
+    androidTestImplementation compose_bom
+    implementation 'androidx.compose.ui:ui'
+    implementation 'androidx.compose.ui:ui-tooling-preview'
+    implementation 'androidx.compose.material3:material3'
+    implementation 'androidx.compose.material:material'
+    implementation 'androidx.compose.runtime:runtime'
+    implementation 'androidx.activity:activity-compose:1.7.2'
+    debugImplementation 'androidx.compose.ui:ui-tooling'
 
-    // Retrofit
+    // Accompanist
+    implementation "com.google.accompanist:accompanist-permissions:0.32.0"
+    implementation "com.google.accompanist:accompanist-systemuicontroller:0.32.0"
+
+    // DataStore
+    implementation "androidx.datastore:datastore-preferences:1.0.0"
+
+    // WorkManager
+    implementation "androidx.work:work-runtime-ktx:2.8.1"
+
+    // RxJava 2
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.21'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+    implementation 'io.reactivex.rxjava2:rxkotlin:2.4.0'
+
+    // Dagger 2
+    implementation 'com.google.dagger:dagger:2.48'
+    implementation 'com.google.dagger:dagger-android:2.48'
+    implementation 'com.google.dagger:dagger-android-support:2.48'
+    kapt 'com.google.dagger:dagger-compiler:2.48'
+    kapt 'com.google.dagger:dagger-android-processor:2.48'
+
+    // Room
+    implementation "androidx.room:room-runtime:2.5.2"
+    implementation "androidx.room:room-rxjava2:2.5.2"
+    kapt "androidx.room:room-compiler:2.5.2"
+
+    // Networking
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
-
-    // OkHttp (Corrected version - this was the source of the error in job-logs (2).txt)
-    // Ensure the version string is correct, e.g., 4.12.0, not something like "ok12.0:"
     implementation 'com.squareup.okhttp3:okhttp:4.12.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.12.0'
 
-    // Data Store
-    implementation "androidx.datastore:datastore-preferences:1.0.0"
-
-    // Work Manager
-    implementation "androidx.work:work-runtime-ktx:2.8.1"
-
-    // Accompanist System UI Controller (if using Compose for parts of the UI)
-    implementation "com.google.accompanist:accompanist-systemuicontroller:0.32.0"
-
-    // Custom Tabs (for opening links externally if needed)
-    implementation 'androidx.browser:browser:1.5.0'
-
-    // Swipe Refresh (if using Compose for parts of the UI)
-    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
-
-    // RecyclerView
-    implementation "androidx.recyclerview:recyclerview:1.3.0"
-
-    // Fragment KTX
-    implementation "androidx.fragment:fragment-ktx:1.6.0"
-
-    // Activity KTX
-    implementation "androidx.activity:activity-ktx:1.7.2"
-
-    // Kotlin Coroutines Core
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4"
-
-    // Kotlin Coroutines Android
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
-
-    // Gson (often used with Retrofit)
+    // Gson
     implementation 'com.google.code.gson:gson:2.10.1'
 
-    // Hilt (if planning to use DI later)
-    // implementation "com.google.dagger:hilt-android:2.44.2"
-    // ksp "com.google.dagger:hilt-compiler:2.44.2" // Requires KSP plugin
+    // JSoup
+    implementation 'org.jsoup:jsoup:1.16.1'
 
-    // RxJava2/RxKotlin (if used by the original Styx codebase you're adapting)
-    // implementation 'io.reactivex.rxjava2:rxjava:2.x.y'
-    // implementation 'io.reactivex.rxjava2:rxandroid:2.x.y'
-    // implementation 'io.reactivex.rxjava2:rxkotlin:2.x.y'
+    // Readability4J (reading mode)
+    implementation 'net.dankito.readability4j:readability4j:1.0.8'
 
-    // RxJava3/RxKotlin (if used by the original Styx codebase you're adapting)
-    // implementation 'io.reactivex.rxjava3:rxjava:3.x.y'
-    // implementation 'io.reactivex.rxjava3:rxandroid:3.x.y'
-    // implementation 'io.reactivex.rxjava3:rxkotlin:3.x.y'
+    // Kotlin Coroutines
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3"
 
-    // JSoup (for HTML parsing, if used)
-    // implementation 'org.jsoup:jsoup:1.15.3' // Or latest version
-
-    // Readability4J (for reading mode, if used)
-    // implementation 'com.github.dankito.readability4j:readability4j:1.0.1' // Or latest version
-
-    // I2P Android Helper (if used)
-    // implementation 'net.i2p.android.helper:i2p-android-helper:+'
-
-    // Orbot Helper (if used)
-    // implementation 'info.guardianproject.net:libtorclient:0.3.2' // Example, check for correct/artifact
-
-    // Note: Libraries like 'anthonycr', 'browser', 'webkit', 'databinding', 'palette',
-    // 'styleable', 'attr', 'ids', 'arrays', 'plurals', 'dimens' mentioned in errors
-    // are likely internal Android libraries or generated resource references (R.*) that
-    // are missing because of previous compilation errors or incorrect imports.
-    // They should resolve once the Gradle file syntax and dependency issues are fixed.
+    // Testing
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 }
-// Optional: Apply KSP plugin globally if using it extensively (e.g., for Room, Hilt)
-// apply plugin: 'com.google.devtools.ksp' // Only if using KSP and the plugin was applied at the top
