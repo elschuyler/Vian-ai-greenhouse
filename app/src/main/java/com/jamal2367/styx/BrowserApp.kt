@@ -7,7 +7,7 @@ import android.os.Build
 import android.os.StrictMode
 import android.webkit.WebView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.library.BuildConfig
+import com.jamal2367.styx.BuildConfig
 import com.jamal2367.styx.database.bookmark.BookmarkExporter
 import com.jamal2367.styx.database.bookmark.BookmarkRepository
 import com.jamal2367.styx.device.BuildInfo
@@ -36,23 +36,25 @@ class BrowserApp : Application() {
 
     lateinit var applicationComponent: AppComponent
 
-    var justStarted: Boolean = true;
+    var justStarted: Boolean = true
 
     override fun onCreate() {
-        // SL: Use this to debug when launched from another app for instance
-        //Debug.waitForDebugger()
-
         super.onCreate()
         instance = this
+
         if (BuildConfig.DEBUG) {
-            StrictMode.setThreadPolicy(StrictMode.ThreadPolicy.Builder()
-                .detectAll()
-                .penaltyLog()
-                .build())
-            StrictMode.setVmPolicy(StrictMode.VmPolicy.Builder()
-                .detectAll()
-                .penaltyLog()
-                .build())
+            StrictMode.setThreadPolicy(
+                StrictMode.ThreadPolicy.Builder()
+                    .detectAll()
+                    .penaltyLog()
+                    .build()
+            )
+            StrictMode.setVmPolicy(
+                StrictMode.VmPolicy.Builder()
+                    .detectAll()
+                    .penaltyLog()
+                    .build()
+            )
         }
 
         if (Build.VERSION.SDK_INT >= 28) {
@@ -67,7 +69,6 @@ class BrowserApp : Application() {
             if (BuildConfig.DEBUG) {
                 FileUtils.writeCrashToStorage(ex)
             }
-
             if (defaultHandler != null) {
                 defaultHandler.uncaughtException(thread, ex)
             } else {
@@ -108,45 +109,31 @@ class BrowserApp : Application() {
                 MemoryLeakUtils.clearNextServedView(activity as AppCompatActivity, this@BrowserApp)
             }
 
-            // Track current activity
             override fun onActivityResumed(activity: Activity) {
                 resumedActivity = activity as AppCompatActivity
             }
 
-            // Track current activity
             override fun onActivityPaused(activity: Activity) {
                 resumedActivity = null
             }
         })
     }
 
-    /**
-     * Create the [BuildType] from the [BuildConfig].
-     */
-    private fun createBuildInfo() = BuildInfo(when {
-        BuildConfig.DEBUG -> BuildType.DEBUG
-        else -> BuildType.RELEASE
-    })
+    private fun createBuildInfo() = BuildInfo(
+        when {
+            BuildConfig.DEBUG -> BuildType.DEBUG
+            else -> BuildType.RELEASE
+        }
+    )
 
     companion object {
         private const val TAG = "BrowserApp"
         lateinit var instance: BrowserApp
-        // Used to track current activity
         var resumedActivity: AppCompatActivity? = null
 
-        /**
-         * Used to get current activity context in order to access current theme.
-         */
-        fun currentContext() : Context {
+        fun currentContext(): Context {
             val act = resumedActivity
-            if (act!=null)
-            {
-                return act
-            }
-            else
-            {
-                return instance.applicationContext
-            }
+            return if (act != null) act else instance.applicationContext
         }
     }
 }
