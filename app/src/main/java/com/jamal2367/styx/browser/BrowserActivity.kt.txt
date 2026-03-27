@@ -1,0 +1,16 @@
+package com.jamal2367.styx.browser
+
+import com.jamal2367.styx.AppTheme
+import com.jamal2367.styx.ThemedActivity
+
+/**
+ * The base activity for the browser. MainActivity and IncognitoActivity both
+ * extend this. Full implementation is in Phase 3; this stub is sufficient for
+ * the build to compile and kapt to run without errors.
+ */
+abstract class BrowserActivity : ThemedActivity() {
+
+    // themeStyle is left abstract so concrete subclasses provide the theme.
+    override fun themeStyle(aTheme: AppTheme): Int = 0
+
+}
