@@ -45,6 +45,12 @@ android {
     namespace 'com.jamal2367.styx'
 }
 
+repositories {
+    google()
+    mavenCentral()
+    maven { url 'https://jitpack.io' }   // Required for Mezzanine
+}
+
 dependencies {
     implementation 'androidx.core:core-ktx:1.12.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
@@ -70,13 +76,13 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxjava:2.2.21'
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
 
-    // Dagger 2 (2.44.2 to avoid kapt bug)
+    // Dagger 2
     implementation 'com.google.dagger:dagger:2.44.2'
     kapt 'com.google.dagger:dagger-compiler:2.44.2'
 
-    // Mezzanine (for @FileStream annotation)
-    implementation 'com.anthonycr.mezzanine:mezzanine:1.1.1'
-    kapt 'com.anthonycr.mezzanine:mezzanine-compiler:1.1.1'
+    // Mezzanine (for @FileStream)
+    implementation 'com.github.anthonycr:Mezzanine:1.2.0'
+    kapt 'com.github.anthonycr:Mezzanine:1.2.0'
 
     // JSoup
     implementation 'org.jsoup:jsoup:1.16.1'
